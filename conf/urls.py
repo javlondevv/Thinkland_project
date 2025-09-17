@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
@@ -23,11 +24,10 @@ from conf import settings
 from conf.settings import STATIC_URL, MEDIA_URL, STATIC_ROOT, MEDIA_ROOT
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/auth/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/v1/', include("apps.urls")),
-
+    path("admin/", admin.site.urls),
+    path("api/auth/token", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/auth/token/refresh", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/v1/", include("apps.urls")),
 ]
 
 if settings.DEBUG:

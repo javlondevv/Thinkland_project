@@ -33,44 +33,43 @@ class ProductViewSet(ModelViewSet):
         operation_description="Search products by title, description, or category using Elasticsearch",
         manual_parameters=[
             openapi.Parameter(
-                'q',
+                "q",
                 openapi.IN_QUERY,
                 description="Search query string",
                 type=openapi.TYPE_STRING,
                 required=True,
-                example="iPhone"
+                example="iPhone",
             ),
         ],
         responses={
             200: openapi.Response(
                 description="List of products matching the search query",
-                schema=ProductSerializer(many=True)
+                schema=ProductSerializer(many=True),
             ),
             400: openapi.Response(
                 description="Bad Request - Query parameter 'q' is required",
                 schema=openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
-                        'detail': openapi.Schema(
+                        "detail": openapi.Schema(
                             type=openapi.TYPE_STRING,
-                            example="Query parameter 'q' is required."
+                            example="Query parameter 'q' is required.",
                         )
-                    }
-                )
+                    },
+                ),
             ),
             500: openapi.Response(
                 description="Internal Server Error - Elasticsearch connection issue",
                 schema=openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
-                        'error': openapi.Schema(
-                            type=openapi.TYPE_STRING,
-                            example="Connection error"
+                        "error": openapi.Schema(
+                            type=openapi.TYPE_STRING, example="Connection error"
                         )
-                    }
-                )
-            )
-        }
+                    },
+                ),
+            ),
+        },
     )
     @action(detail=False, methods=["get"], url_path="search")
     def search(self, request):
@@ -93,13 +92,17 @@ class ProductViewSet(ModelViewSet):
 
         try:
             response = es.search(index="products", body=body)
-            product_ids = [hit["_source"]["id"] for hit in response.get("hits", {}).get("hits", [])]
-            products = Product.objects.filter(id__in=product_ids).select_related("category")
+            product_ids = [
+                hit["_source"]["id"] for hit in response.get("hits", {}).get("hits", [])
+            ]
+            products = Product.objects.filter(id__in=product_ids).select_related(
+                "category"
+            )
         except Exception as exc:
             # Fallback to database search if Elasticsearch is not available
-            products = Product.objects.filter(
-                title__icontains=query
-            ).select_related("category")
+            products = Product.objects.filter(title__icontains=query).select_related(
+                "category"
+            )
             if not products.exists():
                 products = Product.objects.filter(
                     description__icontains=query
