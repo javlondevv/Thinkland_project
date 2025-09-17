@@ -1,0 +1,51 @@
+# VCS
+.git
+.gitignore
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Local env files / secrets
+.env
+*.env
+.env.*
+
+# Django generated files
+static/
+staticfiles/
+media/
+
+# Tests / coverage
+.pytest_cache/
+.coverage*
+htmlcov/
+.tox/
+
+# Type checking cache
+.mypy_cache/
+.pytype/
+
+# Editors
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+
+# Node
+node_modules/
+
+# Docker build context noise
+**/.cache/
+**/*.log
+
+# Local databases
+*.sqlite3
